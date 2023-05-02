@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,7 +15,11 @@
         {{ bootstrap.load_js() }}
     </main>
     <div>
-        <img src="{{ url_for('static', filename='p1.png')}}" width="112" height="112" >
+		<img src="{{ url_for('static', filename='p2.jpg')}}" width="100" height="100"  style="vertical-align: middle;"/>
+		<a href="https://www.bilibili.com/video/BV{{ flask_bv }}">{{flask_name}}</a>
+    </div>
+    <div>
+        <img src="{{ url_for('static', filename='p1.png')}}" width="1000" height="1000" >
     </div>
 </body>
 </html>

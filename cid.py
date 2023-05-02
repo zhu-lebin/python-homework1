@@ -23,22 +23,40 @@ headers = {
 }
 class wdcloud:
     def __init__(self,bv):
-        #写得有点长但是对的
-        self.cid = requests.get(url='https://api.bilibili.com/x/player/pagelist?bvid='+bv, headers=headers).json()['data'][0]['cid']
-        #
+        #获取cid，用于请求弹幕数据，这里使用了b站的api，通过bv号找到包含cid的json数据再解析出来
+        self.data = requests.get(url='https://api.bilibili.com/x/player/pagelist?bvid='+bv, headers=headers).json()['data'][0]
+        self.cid = self.data['cid']
+        self.name = str(self.data['part'])
+        self.frame = str(self.data['first_frame'])
+        #得到词云
+    def loadframe(self):
+        re = requests.get(self.frame, headers=headers)
+        print(re.status_code)  # 查看请求状态，返回200说明正常
+        path = 'D:\learn\py&deeplearn\py4\static\p2.jpg'  # 文件储存地址
+        with open(path, 'wb') as f:  # 把图片数据写入本地，wb表示二进制储存
+                f.write(re.content)
     def makeph(self):
+        #利用另一个api请求到评论
         response = requests.get(url='http://comment.bilibili.com/'+str(self.cid)+'.xml', headers=headers)
+        #中文
         response.encoding = "utf-8"
         r = response.text
+        #构造正则表达式提取文本，得到的是列表，连接后用jieba分词再重新连接成以空格分隔的文本
 
         pattern = re.compile('>(.*?)</d>', re.S)
         items = re.findall(pattern, r)
-        litext = ' '.join(items)
-        ls = jieba.cut(litext)
-        text = ' '.join(ls)
+        items2 = []
 
+        litext = ' '.join(items)
+        #改进去除了单个字，分词效果好不少
+        ls = jieba.cut(litext)
+        for wordt in ls:
+            if (len(wordt) > 1):
+                items2.append(wordt)
+        text = ' '.join(items2)
+        #设置取消报错提示，设置去除的词
         jieba.setLogLevel(jieba.logging.INFO)
-        stopwords = ["的", "是", "了", "不是", "是", "就", "没", "这", "也","什么","吧","啊"]  # 去掉不需要显示的词
+        stopwords = ["可以","不是","什么","一个","一下","这样","这个","所以"]
 
         img = Image.open("D:\图库\图片\cybj.png")  # 打开图片
         mask = np.array(img)  # 将图片装换为数组
@@ -51,6 +69,6 @@ class wdcloud:
                        stopwords=stopwords)
 
         wc.generate_from_text(text)
-        wc.to_file(r"D:\learn\py&deeplearn\v2\static\p1.png")
-
+        wc.to_file(r"D:\learn\py&deeplearn\py4\static\p1.png")
+        #注意加r
 
