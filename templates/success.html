@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>flask_form</title>
+    {{ bootstrap.load_css() }}
+</head>
+<body>
+    <main class="container">
+        {% for message in get_flashed_messages() %}
+            {{ message }}
+        {% endfor %}
+        {{ bootstrap.load_js() }}
+    </main>
+    <div>
+        <img src="{{ url_for('static', filename='p1.png')}}" width="1000" height="1000" >
+    </div>
+</body>
+</html>
