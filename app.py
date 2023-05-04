@@ -4,14 +4,12 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from flask_wtf import FlaskForm
 from wtforms.validators import DataRequired, Length
 from cid import wdcloud
+from aid import tri
 import base64
 # https://bootstrap-flask.readthedocs.io/en/latest/
 #引入表单类，继承LoginForm，
 class WdcloudForm(FlaskForm):
     bv = StringField(label='BV', validators=[DataRequired(), Length(1, 30)])
-    #下面注释是从网上复制的flask模板先留着
-    #password = StringField(label='Password', validators=[DataRequired(), Length(4, 10)])
-    #remember = BooleanField(label='Remember me')
     submit = SubmitField(label='submit')
 
 class SForm(FlaskForm):
@@ -30,8 +28,11 @@ def success():
     wd = wdcloud(bv)
     wd.makeph()
     wd.loadframe()
+    tr = tri(bv)
+    print(tr.like)
     print(bv)
-    return render_template('success.html',flask_name=wd.name, flask_bv=bv)
+    return render_template('success.html',flask_name=wd.name, flask_bv=bv,flask_coin=tr.coin
+                           ,flask_share=tr.share,flask_like=tr.like)
 
 
 @app.route('/', methods=['GET', 'POST'])
